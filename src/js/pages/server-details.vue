@@ -1,12 +1,17 @@
 <template>
     <div>
-        <div class="titlebar" v-if="server">{{ server.name }}</div>
+        <div class="titlebar" v-if="server">
+            <div class="backbtn" @click="back"><span class="fa fa-chevron-left"></span></div>
+            {{ server.name }}
+            <div class="spacer backbtn"><span class="fa fa-chevron-left"></span></div>
+        </div>
         <div class="panel">
             <div class="panel-heading">Sites</div>
             <ul class="list-group">
-                <li class="list-item" v-for="site in sites">
+                <router-link tag="li" :to="'/servers/' + server.id + '/sites/' + site.id" class="list-item flex" v-for="site in sites" :key="site.id">
                     <div class="list-item-title">{{ site.name }}</div>
-                </li>
+                    <div class="small" v-html="getSiteApp(site)"></div>
+                </router-link>
             </ul>
         </div>
     </div>
@@ -24,10 +29,34 @@
                 return server;
             },
             sites(){
-                return this.server.sites;
+                return this.$store.getters.getSitesForServer(this.server);
             }
         },
         props: [],
-        methods: {}
+        methods: {
+            back(){
+                return this.$router.push('/servers')
+            },
+            getSiteApp(site){
+                if(site.app){
+                    if(site.app === 'WordPress'){
+                        return `<span class="fa fa-wordpress"></span>`
+                    }
+
+                    return `<span class="fa fa-question-circle-o"></span>`
+                } else if(site.repository_provider){
+                    if(site.repository_provider === 'gitlab'){
+                        return `<span class="fa fa-gitlab"></span>`
+                    }
+                    if(site.repository_provider === 'github'){
+                        return `<span class="fa fa-github"></span>`
+                    }
+
+                    return `<span class="fa fa-question-circle-o"></span>`
+                }
+
+                return `<span class="fa fa-times-circle-o"></span>`
+            }
+        }
     }
 </script>

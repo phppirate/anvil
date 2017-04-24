@@ -3,16 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>Anvil</title>
+    <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
     <div id="app">
-        <router-view v-if="! loading"></router-view>
-        <div v-else>Loading...</div>
-
-        <div class="logo">
-
-
+        <div v-if="isLoggedIn">
+            <router-view v-if="! loading"></router-view>
+            <div v-else class="loading"><span class="fa fa-spinner fa-pulse"></span></div>
+        </div>
+        <div class="login-screen" v-else>
+            <div class="titlebar">
+                <div></div>
+                Anvil
+                <div></div>
+            </div>
+            <div class="panel">
+                <div class="panel-heading">Log In</div>
+                <div class="panel-body">
+                    <div>
+                        <input class="form-control" type="text" ref="token" name="api_token" id="api_token" placeholder="API Token">
+                    </div>
+                    <div>
+                        <button class="btn is-success btn-block" @click="logIn" v-if="! connecting">Connect</button>
+                        <button class="btn is-success btn-block disabled" @click="logIn" v-else><span class="fa fa-spinner fa-pulse"></span></button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

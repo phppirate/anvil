@@ -15,6 +15,7 @@ let router = new VueRouter({
 let store = new Vuex.Store({
     state: {
         servers: [],
+        sites: [],
         loading: true
     },
     actions,
@@ -26,39 +27,45 @@ console.log(router);
 
 
 window.app = new Vue({
-    data: {},
+    data: {
+        isLoggedIn: false,
+        connecting: false
+    },
     computed: {
         loading(){
             return this.$store.state.loading;
         }
     },
     methods: {
-        getSites(){
-            // let request = new Request();
-            fetch('https://forge.laravel.com/api/v1/servers', {
-                method: 'GET',
-                headers: {
-                   'Content-Type': 'applicatoin/json',
-                   'Accept': 'applicatoin/json',
-                   'Authorization': 'Bearer ' + config.api_token
-                },
-                mode: 'cors',
-                cache: 'default'
-            })
-                .then(r => {
-                    console.log(r);
-
-                    return r.json()
-                })
-                .then(r => {
-                    console.log(r);
-                    this.servers = r.servers;
-                });
+        getData(){
+            this.$store.dispatch('getServers')
+        },
+        checkLoggedIn(){
+            this.isLoggedIn = loggedIn;
+            if(this.isLoggedIn){
+                this.getData();
+            }
+        },
+        logIn(){
+            let apiToken = this.$refs.token.value;
+            console.log(apiToken);
+            let data = {
+                api_token: apiToken
+            };
+            fs.writeFile(configPath, JSON.stringify(data), 'utf8', err => {
+                window.location.reload();
+                console.log(err);
+            });
+        },
+        logOut(){
+            fs.unlink(configPath, err => {
+                window.location.reload();
+                console.log(err);
+            });
         }
     },
     mounted(){
-        this.getSites()
-        this.$store.dispatch('getServers')
+        this.checkLoggedIn();
     },
     router,
     store

@@ -4,7 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "pack": "electron-packager . --icon=icons/icon --overwrite",
+    "pack": "electron-packager . --icon=app/icons/app-icon --overwrite",
     "dev": "cross-env NODE_ENV=development webpack --progress --hide-modules",
     "watch": "cross-env NODE_ENV=development webpack --watch --progress --hide-modules",
     "hot": "cross-env NODE_ENV=development webpack-dev-server --inline --hot",
@@ -15,5 +15,8 @@
   "license": "ISC",
   "dependencies": {
     "menubar": "^5.2.3"
+  },
+  "devDependencies": {
+    "electron": "^1.6.6"
   }
 }

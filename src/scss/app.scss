@@ -25,13 +25,19 @@ html, body {
     right: 0;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     background: #353535;
     color: #fff;
     font-size: 18px;
     font-weight: 100;
     height: 50px;
     border-top: 4px solid #20b885;
+}
+.backbtn{
+    padding: 0px 10px;
+}
+.spacer{
+    opacity: 0;
 }
 
 .panel{
@@ -48,6 +54,9 @@ html, body {
     padding: 10px;
     display: flex;
     align-items: center;
+}
+.panel-body{
+    padding: 10px
 }
 
 .list-group{
@@ -83,4 +92,81 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+
+
+
+.btn{
+    outline: none;
+    cursor: pointer;
+    padding: 8px 12px;
+    border: 1px solid #eee;
+    background: #fafafa;
+    border-radius: 4px;
+    font-size: 14px;
+    &:hover{
+        background: #efefef;
+    }
+}
+
+.btn.is-success{
+    background: #20b885;
+    color: #fff;
+    border: 1px solid darken(#20b885, 5%);
+    &:hover{
+        background: darken(#20b885, 5%);
+    }
+}
+
+.btn-block{
+    display: block;
+    width: 100%;
+    &:not(:last-child){
+        margin-bottom: 10px
+    }
+}
+.btn.disabled, .btn.disabled:hover, , .btn.disabled:focus{
+    outline: none;
+    background: lighten(#20b885, 10%);
+    border-color: lighten(#20b885, 10%);
+    cursor: default;
+}
+
+.text-center{
+    text-align: center
+}
+
+
+.loading{
+    width: 100vw;
+    height: calc(100vh - 150px);
+    display: flex;
+    align-items: center;
+    color: #000;
+    font-size: 50px;
+    justify-content: center;
+}
+
+.form-control{
+    margin-bottom: 10px;
+    box-shadow: none;
+    border: 2px solid #d7d7d7;
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border-radius: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    &:focus{
+        border-color: #20b885;
+        outline: 0;
+        box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(32,184,133,.6);
+    }
 }

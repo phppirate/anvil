@@ -2,15 +2,14 @@ export default {
     'set-servers': (state, servers) => {
         state.servers = servers;
     },
-    'set-sites-for-server': (state, {sites, server}) => {
-        let serverIndex = state.servers.findIndex(s => {
-            console.log(s);
-            return s.id == server.id
-        });
-        server['sites'] = sites;
-        state.servers[serverIndex] = server;
+    'add-sites': (state, sites) => {
+        state.sites.push(...sites);
     },
     ready(state){
         state.loading = false;
-    }
+    },
+    'set-site': (state, site) => {
+        let theIndex = state.sites.findIndex(s => s.id === site.id);
+        state.sites[theIndex] = site;
+    },
 }

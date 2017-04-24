@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="titlebar">Servers</div>
+        <div class="titlebar"><div></div>Servers<div></div></div>
         <div class="panel">
             <div class="panel-heading">Account #1</div>
             <ul class="list-group">
