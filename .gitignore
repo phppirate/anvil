@@ -1,2 +1,3 @@
 /node_modules
-*.congif.js
+*.config.js
+*.config.json
