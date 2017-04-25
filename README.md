@@ -19,6 +19,6 @@
 
 ## Installation
 
-Download the most recent version from the ["Releases"](https://github.com/phppirate/attendant/releases) page and add it to your Applications folder.
+Download the most recent version from the ["Releases"](https://github.com/phppirate/anvil/releases) page and add it to your Applications folder.
 
 Then go and get an Api Token from Forge and add it to the app.
