@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="icons/title.png">
+  <img src="icons/title.png" height="137px">
 </p>
 
 ## A Laravel Forge Server Manager
 
 <p align="center">
-  <img src="shot.png">
+  <img src="shot.png" width="400px">
 </p>
 
 ## Currently Supports
