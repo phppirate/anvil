@@ -1,13 +1,26 @@
-let baseRequest = (method, path, token) => {
+let baseRequest = (method, path, token, body = null) => {
     return fetch('https://forge.laravel.com/api/v1/' + path, {
         method,
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
             'Authorization': 'Bearer ' + token
-        }
+        },
+        body
     }).then(r => r.json())
 }
+let envRequest = (method, path, token, body = null) => {
+    return fetch('https://forge.laravel.com/api/v1/' + path, {
+        method,
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + token
+        },
+        body: body
+    }).then(r => r.text())
+}
+
 
 export default class Forge {
     constructor(token){
@@ -32,5 +45,21 @@ export default class Forge {
 
     disableQuickDeploy(server, site){
         return baseRequest('DELETE', `servers/${server.id}/sites/${site.id}/deployment`, this.token)
+    }
+
+    getDeployScriptForSite(site){
+        return envRequest('GET', `servers/${site.server_id}/sites/${site.id}/deployment/script`, this.token)
+    }
+
+    saveDeployScriptForSite(site, script){
+        return envRequest('PUT', `servers/${site.server_id}/sites/${site.id}/deployment/script`, this.token, JSON.stringify({ content: script }))
+    }
+
+    getEnvForSite(site){
+        return envRequest('GET', `servers/${site.server_id}/sites/${site.id}/env`, this.token)
+    }
+
+    saveEnvForSite(site, script){
+        return envRequest('PUT', `servers/${site.server_id}/sites/${site.id}/env`, this.token, JSON.stringify({ content: script }))
     }
 }

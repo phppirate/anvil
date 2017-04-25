@@ -19,6 +19,23 @@
                 </div>
             </div>
         </div>
+
+        <div class="panel" v-if="site.app != 'WordPress'">
+            <div class="panel-heading">
+                <div class="title">Deploy Script</div>
+                <div class="icon" @click="editDeployScript"><span class="fa fa-pencil"></span></div>
+            </div>
+            <!-- <div class="panel-body">
+                <code><pre>{{ deployScript }}</pre></code>
+            </div> -->
+        </div>
+
+        <div class="panel" v-if="site.app != 'WordPress'">
+            <div class="panel-heading">
+                <div class="title">ENV File</div>
+                <router-link class="icon" :to="'/servers/' + server.id + '/sites/' + site.id + '/env'"><span class="fa fa-pencil"></span></router-link>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -27,22 +44,33 @@ import Forge from '../Forge.js';
 let forge = config ? new Forge(config.api_token) : null;
 
     export default {
-        data(){
-            return {};
-        },
+        data: () => ({
+            deployScript: null
+        }),
         computed: {
             server(){
                 let server = this.$store.getters.getServerById(this.$route.params.server_id);
                 return server;
             },
             site(){
-                return this.$store.getters.getSiteById(this.$route.params.site_id);
+                let site = this.$store.getters.getSiteById(this.$route.params.site_id)
+                if(! this.deployScript){
+                    // this.getDeployScript(site)
+                }
+                return site
             }
         },
         props: [],
         methods: {
             back(){
                 return this.$router.push('/servers/' + this.server.id)
+            },
+            getDeployScript(site){
+                forge.getDeployScriptForSite(site)
+                    .then(r => {
+                        console.log(r);
+                        this.deployScript = r;
+                    });
             },
             visitSite(){
                 console.log('Opening', shell);
@@ -74,6 +102,15 @@ let forge = config ? new Forge(config.api_token) : null;
             toggleQuickDeploy(){
                 // this.site.quick_deploy = !this.site.quick_deploy;
                 this.$store.dispatch('toggleQuickDeploy', {server: this.server, site: this.site});
+            },
+            editDeployScript(){
+                this.$router.push('/servers/' + this.server.id + '/sites/' + this.site.id + '/deployment/script')
+            },
+            shouldGetDeployScript(){
+                if(this.site.app != "WordPress"){
+                    return true;
+                }
+                return false;
             }
         }
     }
