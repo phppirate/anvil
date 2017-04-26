@@ -17,29 +17,29 @@ var mb = menubar({
 mb.on('ready', () => {
     // console.log('Some Item', mb.window)
     // your app code here
-    let template  = [
-        {
-            label: "Anvil",
-            submenu: [
-                {
-                    role: 'about'
-                },
-                {
-                    role: 'reload'
-                },
-                {
-                    role: 'copy'
-                },
-                {
-                    role: 'paste'
-                },
-                {
-                    role: 'quit'
-                }
-            ]
-        }
-    ];
+    // let template  = [
+    //     {
+    //         label: "Anvil",
+    //         submenu: [
+    //             {
+    //                 role: 'about'
+    //             },
+    //             {
+    //                 role: 'reload'
+    //             },
+    //             {
+    //                 role: 'copy'
+    //             },
+    //             {
+    //                 role: 'paste'
+    //             },
+    //             {
+    //                 role: 'quit'
+    //             }
+    //         ]
+    //     }
+    // ];
 
-    let menu = Menu.buildFromTemplate(template);
-    Menu.setApplicationMenu(menu);
+    // let menu = Menu.buildFromTemplate(template);
+    // Menu.setApplicationMenu(menu);
 })

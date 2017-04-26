@@ -16,6 +16,7 @@
 - Rebooting MySQL
 - Rebooting Nginx
 - Rebooting Postgres
+- SSH into Server using iTerm (Native Terminal Coming soon)
 - Viewing a Server on Forge Website
 - Deploying Sites
 - Toggle Quick Deploy
