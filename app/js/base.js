@@ -1,4 +1,5 @@
 let fs = require('fs');
+let osap = require('osap');
 let shell = require('electron').shell;
 let basePath = __dirname;
 basePath = basePath.split('/');

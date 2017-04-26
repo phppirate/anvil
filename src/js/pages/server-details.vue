@@ -38,9 +38,13 @@
                     <button class="btn is-success btn-block disabled" v-else><span class="fa fa-spinner fa-pulse"></span></button>
                 </div>
 
-                <div>
+                <div style="margin-bottom: 10px;">
                     <button class="btn is-success btn-block" @click="rebootPostgres" v-if="! rebootingPostgres">Reboot Postgres</button>
                     <button class="btn is-success btn-block disabled" v-else><span class="fa fa-spinner fa-pulse"></span></button>
+                </div>
+
+                <div>
+                    <button class="btn btn-block" @click="openSshInIterm">SSH In iTerm</button>
                 </div>
             </div>
         </div>
@@ -120,6 +124,12 @@
                 }
 
                 return `<span class="fa fa-times-circle-o"></span>`
+            },
+            openSshInIterm(){
+                osap(`tell application "iTerm"\rset newWindow to (create window with default profile command "ssh forge@${this.server.ip_address}")\rend tell`);
+            },
+            openSshInTerm(){
+                osap(`tell application "iTerm"\rset newWindow to (create window with default profile command "ssh forge@${this.server.ip_address}")\rend tell`);
             }
         }
     }
