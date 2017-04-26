@@ -51,20 +51,15 @@ window.app = new Vue({
         },
         logIn(){
             let apiToken = this.$refs.token.value;
-            console.log(apiToken);
             let data = {
                 api_token: apiToken
             };
-            fs.writeFile(configPath, JSON.stringify(data), 'utf8', err => {
-                window.location.reload();
-                console.log(err);
-            });
+            localStorage.setItem('config', JSON.stringify(data));
+            window.location.reload();
         },
         logOut(){
-            fs.unlink(configPath, err => {
-                window.location.reload();
-                console.log(err);
-            });
+            localStorage.removeItem('config');
+            window.location.reload();
         }
     },
     mounted(){
