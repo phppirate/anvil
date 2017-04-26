@@ -14,7 +14,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "menubar": "^5.2.3"
+    "menubar": "^5.2.3",
+    "osap": "^1.0.2"
   },
   "devDependencies": {
     "electron": "^1.6.6"

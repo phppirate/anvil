@@ -45,6 +45,7 @@
 
                 <div>
                     <button class="btn btn-block" @click="openSshInIterm">SSH In iTerm</button>
+                    <button class="btn btn-block" @click="openSshInTerm">SSH In Terminal</button>
                 </div>
             </div>
         </div>
@@ -129,7 +130,7 @@
                 osap(`tell application "iTerm"\rset newWindow to (create window with default profile command "ssh forge@${this.server.ip_address}")\rend tell`);
             },
             openSshInTerm(){
-                osap(`tell application "iTerm"\rset newWindow to (create window with default profile command "ssh forge@${this.server.ip_address}")\rend tell`);
+                osap(`tell application "Terminal"\rset currentTab to do script ("ssh forge@${this.server.ip_address}")\rend tell`);
             }
         }
     }
