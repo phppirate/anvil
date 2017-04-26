@@ -13,12 +13,16 @@
 - Listing Servers
 - Viewing Server Sites
 - Rebooting a Server
+- Rebooting MySQL
+- Rebooting Nginx
+- Rebooting Postgres
 - Viewing a Server on Forge Website
 - Deploying Sites
 - Toggle Quick Deploy
 - Viewing a Site on Forge Website
 - Editing Deployment Scripts
 - Editing ENV Files
+- View Deployment Logs
 
 ## Installation
 

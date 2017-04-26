@@ -51,6 +51,18 @@ export default class Forge {
         return noResponseRequest('POST', `servers/${server.id}/reboot`, this.token)
     }
 
+    rebootMysql(server){
+        return noResponseRequest('POST', `servers/${server.id}/mysql/reboot`, this.token)
+    }
+
+    rebootNginx(server){
+        return noResponseRequest('POST', `servers/${server.id}/nginx/reboot`, this.token)
+    }
+
+    rebootPostgres(server){
+        return noResponseRequest('POST', `servers/${server.id}/postgres/reboot`, this.token)
+    }
+
     // Site Actions
     deployServerSite(server, site){
         return baseRequest('POST', `servers/${server.id}/sites/${site.id}/deployment/deploy`, this.token)

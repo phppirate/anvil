@@ -201,6 +201,21 @@ var Forge = function () {
         value: function rebootServer(server) {
             return noResponseRequest('POST', 'servers/' + server.id + '/reboot', this.token);
         }
+    }, {
+        key: 'rebootMysql',
+        value: function rebootMysql(server) {
+            return noResponseRequest('POST', 'servers/' + server.id + '/mysql/reboot', this.token);
+        }
+    }, {
+        key: 'rebootNginx',
+        value: function rebootNginx(server) {
+            return noResponseRequest('POST', 'servers/' + server.id + '/nginx/reboot', this.token);
+        }
+    }, {
+        key: 'rebootPostgres',
+        value: function rebootPostgres(server) {
+            return noResponseRequest('POST', 'servers/' + server.id + '/postgres/reboot', this.token);
+        }
 
         // Site Actions
 
@@ -383,11 +398,34 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            rebooting: false
+            rebooting: false,
+            rebootingMysql: false,
+            rebootingNginx: false,
+            rebootingPostgres: false
         };
     },
     computed: {
@@ -414,6 +452,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.rebooting = true;
             forge.rebootServer(this.server).then(function (r) {
                 _this.rebooting = false;
+            });
+        },
+        rebootMysql: function rebootMysql() {
+            var _this2 = this;
+
+            this.rebootingMysql = true;
+            forge.rebootMysql(this.server).then(function (r) {
+                _this2.rebootingMysql = false;
+            });
+        },
+        rebootNginx: function rebootNginx() {
+            var _this3 = this;
+
+            this.rebootingNginx = true;
+            forge.rebootNginx(this.server).then(function (r) {
+                _this3.rebootingNginx = false;
+            });
+        },
+        rebootPostgres: function rebootPostgres() {
+            var _this4 = this;
+
+            this.rebootingPostgres = true;
+            forge.rebootPostgres(this.server).then(function (r) {
+                _this4.rebootingPostgres = false;
             });
         },
         getSiteApp: function getSiteApp(site) {
@@ -1118,16 +1180,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "click": _vm.viewOnForge
     }
-  }, [_vm._v("View on Forge")]), _vm._v(" "), _c('div', [(!_vm.rebooting) ? _c('button', {
-    staticClass: "btn is-success btn-block",
-    on: {
-      "click": _vm.rebootServer
-    }
-  }, [_vm._v("Reboot")]) : _c('button', {
-    staticClass: "btn is-success btn-block disabled"
-  }, [_c('span', {
-    staticClass: "fa fa-spinner fa-pulse"
-  })])])])]), _vm._v(" "), _c('div', {
+  }, [_vm._v("View on Forge")])])]), _vm._v(" "), _c('div', {
     staticClass: "panel"
   }, [_c('div', {
     staticClass: "panel-heading"
@@ -1149,7 +1202,59 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "innerHTML": _vm._s(_vm.getSiteApp(site))
       }
     })])
-  }))])])
+  }))]), _vm._v(" "), _c('div', {
+    staticClass: "panel"
+  }, [_c('div', {
+    staticClass: "panel-body"
+  }, [_c('div', {
+    staticStyle: {
+      "margin-bottom": "10px"
+    }
+  }, [(!_vm.rebooting) ? _c('button', {
+    staticClass: "btn is-success btn-block",
+    on: {
+      "click": _vm.rebootServer
+    }
+  }, [_vm._v("Reboot")]) : _c('button', {
+    staticClass: "btn is-success btn-block disabled"
+  }, [_c('span', {
+    staticClass: "fa fa-spinner fa-pulse"
+  })])]), _vm._v(" "), _c('div', {
+    staticStyle: {
+      "margin-bottom": "10px"
+    }
+  }, [(!_vm.rebootingMysql) ? _c('button', {
+    staticClass: "btn is-success btn-block",
+    on: {
+      "click": _vm.rebootMysql
+    }
+  }, [_vm._v("Reboot Mysql")]) : _c('button', {
+    staticClass: "btn is-success btn-block disabled"
+  }, [_c('span', {
+    staticClass: "fa fa-spinner fa-pulse"
+  })])]), _vm._v(" "), _c('div', {
+    staticStyle: {
+      "margin-bottom": "10px"
+    }
+  }, [(!_vm.rebootingNginx) ? _c('button', {
+    staticClass: "btn is-success btn-block",
+    on: {
+      "click": _vm.rebootNginx
+    }
+  }, [_vm._v("Reboot Nginx")]) : _c('button', {
+    staticClass: "btn is-success btn-block disabled"
+  }, [_c('span', {
+    staticClass: "fa fa-spinner fa-pulse"
+  })])]), _vm._v(" "), _c('div', [(!_vm.rebootingPostgres) ? _c('button', {
+    staticClass: "btn is-success btn-block",
+    on: {
+      "click": _vm.rebootPostgres
+    }
+  }, [_vm._v("Reboot Postgres")]) : _c('button', {
+    staticClass: "btn is-success btn-block disabled"
+  }, [_c('span', {
+    staticClass: "fa fa-spinner fa-pulse"
+  })])])])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "spacer backbtn"

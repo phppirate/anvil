@@ -8,10 +8,6 @@
         <div class="panel">
             <div class="panel-body">
                 <button class="btn btn-block" @click="viewOnForge">View on Forge</button>
-                <div>
-                    <button class="btn is-success btn-block" @click="rebootServer" v-if="! rebooting">Reboot</button>
-                    <button class="btn is-success btn-block disabled" v-else><span class="fa fa-spinner fa-pulse"></span></button>
-                </div>
             </div>
         </div>
 
@@ -24,13 +20,40 @@
                 </router-link>
             </ul>
         </div>
+
+        <div class="panel">
+            <div class="panel-body">
+                <div style="margin-bottom: 10px;">
+                    <button class="btn is-success btn-block" @click="rebootServer" v-if="! rebooting">Reboot</button>
+                    <button class="btn is-success btn-block disabled" v-else><span class="fa fa-spinner fa-pulse"></span></button>
+                </div>
+
+                <div style="margin-bottom: 10px;">
+                    <button class="btn is-success btn-block" @click="rebootMysql" v-if="! rebootingMysql">Reboot Mysql</button>
+                    <button class="btn is-success btn-block disabled" v-else><span class="fa fa-spinner fa-pulse"></span></button>
+                </div>
+
+                <div style="margin-bottom: 10px;">
+                    <button class="btn is-success btn-block" @click="rebootNginx" v-if="! rebootingNginx">Reboot Nginx</button>
+                    <button class="btn is-success btn-block disabled" v-else><span class="fa fa-spinner fa-pulse"></span></button>
+                </div>
+
+                <div>
+                    <button class="btn is-success btn-block" @click="rebootPostgres" v-if="! rebootingPostgres">Reboot Postgres</button>
+                    <button class="btn is-success btn-block disabled" v-else><span class="fa fa-spinner fa-pulse"></span></button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
     export default {
         data: () => ({
-            rebooting: false
+            rebooting: false,
+            rebootingMysql: false,
+            rebootingNginx: false,
+            rebootingPostgres: false,
         }),
         computed: {
             server(){
@@ -55,6 +78,27 @@
                 forge.rebootServer(this.server)
                     .then(r => {
                         this.rebooting = false;
+                    });
+            },
+            rebootMysql(){
+                this.rebootingMysql = true;
+                forge.rebootMysql(this.server)
+                    .then(r => {
+                        this.rebootingMysql = false;
+                    });
+            },
+            rebootNginx(){
+                this.rebootingNginx = true;
+                forge.rebootNginx(this.server)
+                    .then(r => {
+                        this.rebootingNginx = false;
+                    });
+            },
+            rebootPostgres(){
+                this.rebootingPostgres = true;
+                forge.rebootPostgres(this.server)
+                    .then(r => {
+                        this.rebootingPostgres = false;
                     });
             },
             getSiteApp(site){
