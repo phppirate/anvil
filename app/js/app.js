@@ -212,12 +212,12 @@ var Forge = function () {
     }, {
         key: 'enableQuickDeploy',
         value: function enableQuickDeploy(server, site) {
-            return baseRequest('POST', 'servers/' + server.id + '/sites/' + site.id + '/deployment', this.token);
+            return noResponseRequest('POST', 'servers/' + server.id + '/sites/' + site.id + '/deployment', this.token);
         }
     }, {
         key: 'disableQuickDeploy',
         value: function disableQuickDeploy(server, site) {
-            return baseRequest('DELETE', 'servers/' + server.id + '/sites/' + site.id + '/deployment', this.token);
+            return noResponseRequest('DELETE', 'servers/' + server.id + '/sites/' + site.id + '/deployment', this.token);
         }
     }, {
         key: 'getDeployScriptForSite',
@@ -238,6 +238,11 @@ var Forge = function () {
         key: 'saveEnvForSite',
         value: function saveEnvForSite(site, script) {
             return envRequest('PUT', 'servers/' + site.server_id + '/sites/' + site.id + '/env', this.token, JSON.stringify({ content: script }));
+        }
+    }, {
+        key: 'getDeploymentLog',
+        value: function getDeploymentLog(site) {
+            return envRequest('GET', 'servers/' + site.server_id + '/sites/' + site.id + '/deployment/log', this.token);
         }
     }]);
 
@@ -590,11 +595,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            deployScript: null
+            deployScript: null,
+            deploying: false
         };
     },
     computed: {
@@ -652,7 +668,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return '<span class="fa fa-times-circle-o"></span>';
         },
         deployNow: function deployNow() {
-            forge.deployServerSite(this.server, this.site);
+            var _this2 = this;
+
+            this.deploying = true;
+            forge.deployServerSite(this.server, this.site).then(function (r) {
+                return _this2.deploying = false;
+            });
         },
         toggleQuickDeploy: function toggleQuickDeploy() {
             // this.site.quick_deploy = !this.site.quick_deploy;
@@ -747,7 +768,7 @@ var forge = config ? new __WEBPACK_IMPORTED_MODULE_0__Forge_js__["a" /* default 
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony default export */ __webpack_exports__["a"] = ([{ path: '/', redirect: '/servers' }, { path: '/servers', component: __webpack_require__(14) }, { path: '/servers/:server_id', component: __webpack_require__(13) }, { path: '/servers/:server_id/sites/:site_id', component: __webpack_require__(16) }, { path: '/servers/:server_id/sites/:site_id/deployment/script', component: __webpack_require__(15) }, { path: '/servers/:server_id/sites/:site_id/env', component: __webpack_require__(17) }]);
+/* harmony default export */ __webpack_exports__["a"] = ([{ path: '/', redirect: '/servers' }, { path: '/servers', component: __webpack_require__(14) }, { path: '/servers/:server_id', component: __webpack_require__(13) }, { path: '/servers/:server_id/sites/:site_id', component: __webpack_require__(16) }, { path: '/servers/:server_id/sites/:site_id/deployment/script', component: __webpack_require__(15) }, { path: '/servers/:server_id/sites/:site_id/deployment/log', component: __webpack_require__(32) }, { path: '/servers/:server_id/sites/:site_id/env', component: __webpack_require__(17) }]);
 
 /***/ }),
 /* 10 */
@@ -789,7 +810,7 @@ var forge = config ? new __WEBPACK_IMPORTED_MODULE_0__Forge_js__["a" /* default 
 
         if (site.quick_deploy) {
             site.quick_deploy = false;
-            commit('set-server-site', { server: server, site: site });
+            commit('set-site', site);
             return forge.disableQuickDeploy(server, site);
         }
         site.quick_deploy = true;
@@ -1234,12 +1255,20 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("View on Forge")]), _vm._v(" "), (_vm.site.app != 'WordPress') ? _c('div', {
     staticClass: "deployment"
-  }, [_c('button', {
+  }, [_c('div', {
+    staticStyle: {
+      "margin-bottom": "10px"
+    }
+  }, [(!_vm.deploying) ? _c('button', {
     staticClass: "btn is-success btn-block",
     on: {
       "click": _vm.deployNow
     }
-  }, [_vm._v("Deploy Now")]), _vm._v(" "), (!_vm.site.quick_deploy) ? _c('button', {
+  }, [_vm._v("Deploy Now")]) : _c('button', {
+    staticClass: "btn is-success btn-block disabled"
+  }, [_c('span', {
+    staticClass: "fa fa-spinner fa-pulse"
+  })])]), _vm._v(" "), (!_vm.site.quick_deploy) ? _c('button', {
     staticClass: "btn btn-block",
     on: {
       "click": _vm.toggleQuickDeploy
@@ -1279,6 +1308,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('span', {
     staticClass: "fa fa-pencil"
+  })])], 1)]) : _vm._e(), _vm._v(" "), (_vm.site.app != 'WordPress') ? _c('div', {
+    staticClass: "panel"
+  }, [_c('div', {
+    staticClass: "panel-heading"
+  }, [_c('div', {
+    staticClass: "title"
+  }, [_vm._v("Deployment Log")]), _vm._v(" "), _c('router-link', {
+    staticClass: "icon",
+    attrs: {
+      "to": '/servers/' + _vm.server.id + '/sites/' + _vm.site.id + '/deployment/log'
+    }
+  }, [_c('span', {
+    staticClass: "fa fa-eye"
   })])], 1)]) : _vm._e()]) : _vm._e()
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
@@ -13917,6 +13959,150 @@ module.exports = g;
 __webpack_require__(2);
 module.exports = __webpack_require__(3);
 
+
+/***/ }),
+/* 28 */,
+/* 29 */,
+/* 30 */,
+/* 31 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Forge_js__ = __webpack_require__(1);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+var forge = config ? new __WEBPACK_IMPORTED_MODULE_0__Forge_js__["a" /* default */](config.api_token) : null;
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            log: null,
+            loading: true
+        };
+    },
+    computed: {
+        server: function server() {
+            var server = this.$store.getters.getServerById(this.$route.params.server_id);
+            return server;
+        },
+        site: function site() {
+            var site = this.$store.getters.getSiteById(this.$route.params.site_id);
+            if (!this.deployScript) {
+                this.getDeploymentLog(site);
+            }
+            return site;
+        }
+    },
+    props: [],
+    methods: {
+        back: function back() {
+            return this.$router.push('/servers/' + this.server.id + '/sites/' + this.site.id);
+        },
+        getDeploymentLog: function getDeploymentLog(site) {
+            var _this = this;
+
+            forge.getDeploymentLog(site).then(function (r) {
+                console.log(r);
+                _this.loading = false;
+                _this.log = r;
+            });
+        }
+    },
+    mounted: function mounted() {}
+});
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(0)(
+  /* script */
+  __webpack_require__(31),
+  /* template */
+  __webpack_require__(33),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/sam/electron/anvil/src/js/pages/site-deployment-log.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] site-deployment-log.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-a46c6fa6", Component.options)
+  } else {
+    hotAPI.reload("data-v-a46c6fa6", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', [_c('div', {
+    staticClass: "titlebar"
+  }, [_c('div', {
+    staticClass: "backbtn",
+    on: {
+      "click": _vm.back
+    }
+  }, [_c('span', {
+    staticClass: "fa fa-chevron-left"
+  })]), _vm._v("\n        Deployment Log\n        "), _vm._m(0)]), _vm._v(" "), _c('div', {
+    staticClass: "codeview"
+  }, [_c('input', {
+    attrs: {
+      "type": "hidden"
+    },
+    domProps: {
+      "value": _vm.site.name
+    }
+  }), _vm._v(" "), (_vm.loading) ? _c('div', {
+    staticClass: "text-center"
+  }, [_c('span', {
+    staticClass: "fa fa-spinner fa-pulse fa-2x"
+  })]) : _vm._e(), _vm._v(" "), _c('pre', [_vm._v(_vm._s(_vm.log))])])])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "backbtn spacer"
+  }, [_c('span', {
+    staticClass: "fa fa-chevron-left"
+  })])
+}]}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-a46c6fa6", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

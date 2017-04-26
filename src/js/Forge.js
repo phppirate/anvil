@@ -57,11 +57,11 @@ export default class Forge {
     }
 
     enableQuickDeploy(server, site){
-        return baseRequest('POST', `servers/${server.id}/sites/${site.id}/deployment`, this.token)
+        return noResponseRequest('POST', `servers/${server.id}/sites/${site.id}/deployment`, this.token)
     }
 
     disableQuickDeploy(server, site){
-        return baseRequest('DELETE', `servers/${server.id}/sites/${site.id}/deployment`, this.token)
+        return noResponseRequest('DELETE', `servers/${server.id}/sites/${site.id}/deployment`, this.token)
     }
 
     getDeployScriptForSite(site){
@@ -78,5 +78,9 @@ export default class Forge {
 
     saveEnvForSite(site, script){
         return envRequest('PUT', `servers/${site.server_id}/sites/${site.id}/env`, this.token, JSON.stringify({ content: script }))
+    }
+
+    getDeploymentLog(site){
+        return envRequest('GET', `servers/${site.server_id}/sites/${site.id}/deployment/log`, this.token)
     }
 }

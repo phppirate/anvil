@@ -25,7 +25,7 @@ export default {
     toggleQuickDeploy({commit}, {server, site}){
         if(site.quick_deploy){
             site.quick_deploy = false;
-            commit('set-server-site', {server, site})
+            commit('set-site', site)
             return forge.disableQuickDeploy(server, site);
         }
         site.quick_deploy = true;

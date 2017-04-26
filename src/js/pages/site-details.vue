@@ -11,7 +11,10 @@
                 <button class="btn btn-block" @click="viewOnForge">View on Forge</button>
 
                 <div class="deployment" v-if="site.app != 'WordPress'">
-                    <button class="btn is-success btn-block" @click="deployNow">Deploy Now</button>
+                    <div style="margin-bottom: 10px;">
+                        <button class="btn is-success btn-block" @click="deployNow" v-if="! deploying">Deploy Now</button>
+                        <button class="btn is-success btn-block disabled" v-else><span class="fa fa-spinner fa-pulse"></span></button>
+                    </div>
                     <button class="btn btn-block" v-if="! site.quick_deploy" @click="toggleQuickDeploy">Enable Quick Deploy</button>
                     <button class="btn is-success btn-block" v-else @click="toggleQuickDeploy">Disble Quick Deploy</button>
                 </div>
@@ -37,13 +40,21 @@
                 <router-link class="icon" :to="'/servers/' + server.id + '/sites/' + site.id + '/env'"><span class="fa fa-pencil"></span></router-link>
             </div>
         </div>
+
+        <div class="panel" v-if="site.app != 'WordPress'">
+            <div class="panel-heading">
+                <div class="title">Deployment Log</div>
+                <router-link class="icon" :to="'/servers/' + server.id + '/sites/' + site.id + '/deployment/log'"><span class="fa fa-eye"></span></router-link>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
     export default {
         data: () => ({
-            deployScript: null
+            deployScript: null,
+            deploying: false
         }),
         computed: {
             server(){
@@ -99,7 +110,9 @@
                 return `<span class="fa fa-times-circle-o"></span>`
             },
             deployNow(){
-                forge.deployServerSite(this.server, this.site);
+                this.deploying = true;
+                forge.deployServerSite(this.server, this.site)
+                    .then(r => this.deploying = false );
             },
             toggleQuickDeploy(){
                 // this.site.quick_deploy = !this.site.quick_deploy;
