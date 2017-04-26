@@ -7,6 +7,9 @@ import routes from './routes.js';
 import actions from './vuex/actions.js';
 import getters from './vuex/getters.js';
 import mutations from './vuex/mutations.js';
+import Forge from './Forge.js';
+
+window.forge = config ? new Forge(config.api_token) : null;
 
 let router = new VueRouter({
     routes: routes

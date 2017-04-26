@@ -8,6 +8,7 @@
         <div class="panel">
             <div class="panel-body">
                 <button class="btn btn-block" @click="visitSite">Visit Site</button>
+                <button class="btn btn-block" @click="viewOnForge">View on Forge</button>
 
                 <div class="deployment" v-if="site.app != 'WordPress'">
                     <button class="btn is-success btn-block" @click="deployNow">Deploy Now</button>
@@ -40,9 +41,6 @@
 </template>
 
 <script>
-import Forge from '../Forge.js';
-let forge = config ? new Forge(config.api_token) : null;
-
     export default {
         data: () => ({
             deployScript: null
@@ -75,6 +73,10 @@ let forge = config ? new Forge(config.api_token) : null;
             visitSite(){
                 console.log('Opening', shell);
                 shell.openExternal('http://' + this.site.name);
+            },
+            viewOnForge(){
+                console.log('Opening', shell);
+                shell.openExternal('https://forge.laravel.com/servers/' + this.server.id + '/sites/' + this.site.id);
             },
             getSiteApp(site){
                 if(site.app){

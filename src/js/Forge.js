@@ -9,6 +9,17 @@ let baseRequest = (method, path, token, body = null) => {
         body
     }).then(r => r.json())
 }
+let noResponseRequest = (method, path, token, body = null) => {
+    return fetch('https://forge.laravel.com/api/v1/' + path, {
+        method,
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + token
+        },
+        body
+    })
+}
 let envRequest = (method, path, token, body = null) => {
     return fetch('https://forge.laravel.com/api/v1/' + path, {
         method,
@@ -35,6 +46,12 @@ export default class Forge {
         return baseRequest('GET', 'servers/' + server.id + '/sites', this.token)
     }
 
+    // Server Actions
+    rebootServer(server){
+        return noResponseRequest('POST', `servers/${server.id}/reboot`, this.token)
+    }
+
+    // Site Actions
     deployServerSite(server, site){
         return baseRequest('POST', `servers/${server.id}/sites/${site.id}/deployment/deploy`, this.token)
     }

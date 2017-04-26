@@ -12,8 +12,11 @@
 
 - Listing Servers
 - Viewing Server Sites
+- Rebooting a Server
+- Viewing a Server on Forge Website
 - Deploying Sites
 - Toggle Quick Deploy
+- Viewing a Site on Forge Website
 - Editing Deployment Scripts
 - Editing ENV Files
 

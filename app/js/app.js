@@ -147,6 +147,19 @@ var baseRequest = function baseRequest(method, path, token) {
         return r.json();
     });
 };
+var noResponseRequest = function noResponseRequest(method, path, token) {
+    var body = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+
+    return fetch('https://forge.laravel.com/api/v1/' + path, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + token
+        },
+        body: body
+    });
+};
 var envRequest = function envRequest(method, path, token) {
     var body = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
 
@@ -180,6 +193,17 @@ var Forge = function () {
         value: function getSites(server) {
             return baseRequest('GET', 'servers/' + server.id + '/sites', this.token);
         }
+
+        // Server Actions
+
+    }, {
+        key: 'rebootServer',
+        value: function rebootServer(server) {
+            return noResponseRequest('POST', 'servers/' + server.id + '/reboot', this.token);
+        }
+
+        // Site Actions
+
     }, {
         key: 'deployServerSite',
         value: function deployServerSite(server, site) {
@@ -236,6 +260,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__vuex_actions_js__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__vuex_getters_js__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__vuex_mutations_js__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__Forge_js__ = __webpack_require__(1);
 
 
 
@@ -245,6 +270,9 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_2_vuex
 
 
 
+
+
+window.forge = config ? new __WEBPACK_IMPORTED_MODULE_7__Forge_js__["a" /* default */](config.api_token) : null;
 
 var router = new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
     routes: __WEBPACK_IMPORTED_MODULE_3__routes_js__["a" /* default */]
@@ -340,12 +368,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
-        return {};
+        return {
+            rebooting: false
+        };
     },
-
     computed: {
         server: function server() {
             var server = this.$store.getters.getServerById(this.$route.params.server_id);
@@ -360,6 +399,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         back: function back() {
             return this.$router.push('/servers');
+        },
+        viewOnForge: function viewOnForge() {
+            shell.openExternal('https://forge.laravel.com/servers/' + this.server.id);
+        },
+        rebootServer: function rebootServer() {
+            var _this = this;
+
+            this.rebooting = true;
+            forge.rebootServer(this.server).then(function (r) {
+                _this.rebooting = false;
+            });
         },
         getSiteApp: function getSiteApp(site) {
             if (site.app) {
@@ -498,7 +548,6 @@ var forge = config ? new __WEBPACK_IMPORTED_MODULE_0__Forge_js__["a" /* default 
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Forge_js__ = __webpack_require__(1);
 //
 //
 //
@@ -540,9 +589,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-
-
-var forge = config ? new __WEBPACK_IMPORTED_MODULE_0__Forge_js__["a" /* default */](config.api_token) : null;
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -579,6 +626,10 @@ var forge = config ? new __WEBPACK_IMPORTED_MODULE_0__Forge_js__["a" /* default 
         visitSite: function visitSite() {
             console.log('Opening', shell);
             shell.openExternal('http://' + this.site.name);
+        },
+        viewOnForge: function viewOnForge() {
+            console.log('Opening', shell);
+            shell.openExternal('https://forge.laravel.com/servers/' + this.server.id + '/sites/' + this.site.id);
         },
         getSiteApp: function getSiteApp(site) {
             if (site.app) {
@@ -1040,6 +1091,24 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   })]), _vm._v("\n        " + _vm._s(_vm.server.name) + "\n        "), _vm._m(0)]) : _vm._e(), _vm._v(" "), _c('div', {
     staticClass: "panel"
   }, [_c('div', {
+    staticClass: "panel-body"
+  }, [_c('button', {
+    staticClass: "btn btn-block",
+    on: {
+      "click": _vm.viewOnForge
+    }
+  }, [_vm._v("View on Forge")]), _vm._v(" "), _c('div', [(!_vm.rebooting) ? _c('button', {
+    staticClass: "btn is-success btn-block",
+    on: {
+      "click": _vm.rebootServer
+    }
+  }, [_vm._v("Reboot")]) : _c('button', {
+    staticClass: "btn is-success btn-block disabled"
+  }, [_c('span', {
+    staticClass: "fa fa-spinner fa-pulse"
+  })])])])]), _vm._v(" "), _c('div', {
+    staticClass: "panel"
+  }, [_c('div', {
     staticClass: "panel-heading"
   }, [_vm._v("Sites")]), _vm._v(" "), _c('ul', {
     staticClass: "list-group"
@@ -1158,7 +1227,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "click": _vm.visitSite
     }
-  }, [_vm._v("Visit Site")]), _vm._v(" "), (_vm.site.app != 'WordPress') ? _c('div', {
+  }, [_vm._v("Visit Site")]), _vm._v(" "), _c('button', {
+    staticClass: "btn btn-block",
+    on: {
+      "click": _vm.viewOnForge
+    }
+  }, [_vm._v("View on Forge")]), _vm._v(" "), (_vm.site.app != 'WordPress') ? _c('div', {
     staticClass: "deployment"
   }, [_c('button', {
     staticClass: "btn is-success btn-block",
