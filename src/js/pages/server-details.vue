@@ -24,17 +24,17 @@
         <div class="panel">
             <div class="panel-body">
                 <div style="margin-bottom: 10px;">
-                    <button class="btn is-success btn-block" @click="rebootServer" v-if="! rebooting">Reboot</button>
+                    <button class="btn is-success btn-block" @click="rebootServer" v-if="! rebooting">Reboot Server</button>
                     <button class="btn is-success btn-block disabled" v-else><span class="fa fa-spinner fa-pulse"></span></button>
                 </div>
 
                 <div style="margin-bottom: 10px;">
-                    <button class="btn is-success btn-block" @click="rebootMysql" v-if="! rebootingMysql">Reboot Mysql</button>
+                    <button class="btn is-success btn-block" @click="rebootMysql" v-if="! rebootingMysql">Reboot MySQL</button>
                     <button class="btn is-success btn-block disabled" v-else><span class="fa fa-spinner fa-pulse"></span></button>
                 </div>
 
                 <div style="margin-bottom: 10px;">
-                    <button class="btn is-success btn-block" @click="rebootNginx" v-if="! rebootingNginx">Reboot Nginx</button>
+                    <button class="btn is-success btn-block" @click="rebootNginx" v-if="! rebootingNginx">Reboot NginX</button>
                     <button class="btn is-success btn-block disabled" v-else><span class="fa fa-spinner fa-pulse"></span></button>
                 </div>
 

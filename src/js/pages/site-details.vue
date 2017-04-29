@@ -7,6 +7,10 @@
         </div>
         <div class="panel">
             <div class="panel-body">
+                <div v-if="site.app == 'WordPress'" class="text-center">
+                    <span class="fa fa-wordpress" style="font-size: 72px; margin-top: 10px; margin-bottom: 20px"></span>
+                </div>
+
                 <button class="btn btn-block" @click="visitSite">Visit Site</button>
                 <button class="btn btn-block" @click="viewOnForge">View on Forge</button>
 
@@ -17,9 +21,6 @@
                     </div>
                     <button class="btn btn-block" v-if="! site.quick_deploy" @click="toggleQuickDeploy">Enable Quick Deploy</button>
                     <button class="btn is-success btn-block" v-else @click="toggleQuickDeploy">Disble Quick Deploy</button>
-                </div>
-                <div v-else class="text-center">
-                    <h3><span class="fa fa-wordpress"></span> WordPress Site</h3>
                 </div>
             </div>
         </div>
