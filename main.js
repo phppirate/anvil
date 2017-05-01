@@ -10,7 +10,7 @@ var mb = menubar({
     preloadWindow: true,
     tooltip: "Anvil",
     index: 'file://' + __dirname + "/app/index.html",
-    icon: __dirname + "/app/icons/icon.png",
+    icon: __dirname + "/app/icons/iconTemplate.png",
     transparent: true
 });
 
