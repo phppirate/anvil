@@ -927,6 +927,14 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+class MySQLDatabase {
+    constructor(data) {
+        Object.keys(data).forEach(i => {
+            this[i] = data[i];
+        });
+    }
+}
+
 class ForgeRequest {
     constructor(api_key) {
         this.api_key = api_key;
@@ -964,6 +972,30 @@ class ForgeRequest {
     }
 }
 
+class FirewallRule {
+    constructor(data) {
+        Object.keys(data).forEach(i => {
+            this[i] = data[i];
+        });
+    }
+}
+
+class Certificate {
+    constructor(data) {
+        Object.keys(data).forEach(i => {
+            this[i] = data[i];
+        });
+    }
+}
+
+class MySQLUser {
+    constructor(data) {
+        Object.keys(data).forEach(i => {
+            this[i] = data[i];
+        });
+    }
+}
+
 class Server {
     constructor(data) {
         Object.keys(data).forEach(i => {
@@ -980,7 +1012,7 @@ class Daemon {
     }
 }
 
-class FirewallRule {
+class Worker {
     constructor(data) {
         Object.keys(data).forEach(i => {
             this[i] = data[i];
@@ -1213,6 +1245,111 @@ class Forge {
   updateLoadBalancingConfiguration(serverId, siteId, data) {
     return this.request.base('POST', `servers/${serverId}/sites/${siteId}/balancing`, data);
   }
+
+  // ---------------------------------
+  // Workers
+  // ---------------------------------
+
+  workers(serverId, siteId) {
+    return this.request.json('GET', `servers/${serverId}/sites/${siteId}/workers`, null, r => r.workers.map(data => new Worker(data)));
+  }
+
+  worker(serverId, siteId, workerId) {
+    return this.request.json('GET', `servers/${serverId}/sites/${siteId}/workers/${workerId}`, null, r => new Worker(r.worker));
+  }
+
+  createWorker(serverId, siteId, data) {
+    return this.request.json('POST', `servers/${serverId}/sites/${siteId}/workers`, data, r => new Worker(r.worker));
+  }
+
+  deleteWorker(serverId, siteId, workerId) {
+    return this.request.base('DELETE', `servers/${serverId}/sites/${siteId}/workers/${workerId}`);
+  }
+
+  restartWorker(serverId, siteId, workerId) {
+    return this.request.base('POST', `servers/${serverId}/sites/${siteId}/workers/${workerId}/restart`);
+  }
+
+  // ---------------------------------
+  // Site SSL Certificates
+  // ---------------------------------
+  certificates(serverId, siteId) {
+    return this.request.json('GET', `servers/${serverId}/sites/${siteId}/certificates`, null, ({ certificates }) => certificates.map(data => new Certificate(data)));
+  }
+
+  certificate(serverId, siteId, certificateId) {
+    return this.request.json('GET', `servers/${serverId}/sites/${siteId}/certificates/${certificateId}`, null, ({ certificate }) => new Certificate(certificate));
+  }
+
+  createCertificate(serverId, siteId, data) {
+    return this.request.json('POST', `servers/${serverId}/sites/${siteId}/certificates`, data, ({ certificate }) => new Certificate(certificate));
+  }
+
+  deleteCertificate(serverId, siteId, certificateId) {
+    return this.request.base('DELETE', `servers/${serverId}/sites/${siteId}/certificates/${certificateId}`);
+  }
+
+  getCertificateSigningRequest(serverId, siteId, certificateId) {
+    return this.request.base('GET', `servers/${serverId}/sites/${siteId}/certificates/${certificateId}/csr`);
+  }
+
+  installCertificate(serverId, siteId, certificateId) {
+    return this.request.base('POST', `servers/${serverId}/sites/${siteId}/certificates/${certificateId}/install`, data);
+  }
+
+  activateCertificate(serverId, siteId, certificateId) {
+    return this.request.base('POST', `servers/${serverId}/sites/${siteId}/certificates/${certificateId}/activate`);
+  }
+
+  obtainLetsEncryptCertificate(serverId, siteId, data) {
+    return this.request.json('POST', `servers/${serverId}/sites/${siteId}/certificates/letsencrypt`, data, ({ certificate }) => new Certificate(certificate));
+  }
+
+  // ---------------------------------
+  // MySQL
+  // ---------------------------------
+
+  mysqlDatabases(serverId) {
+    return this.request.json('GET', `servers/${serverId}/mysql`, data, ({ databases }) => databases.map(data => new MySQLDatabase(data)));
+  }
+
+  mysqlDatabase(serverId, databaseId) {
+    return this.request.json('GET', `servers/${serverId}/mysql/${databaseId}`, data, ({ database }) => new MySQLDatabase(database));
+  }
+
+  createMysqlDatabase(serverId, data) {
+    return this.request.json('POST', `servers/${serverId}/mysql`, data, ({ database }) => new MySQLDatabase(database));
+  }
+
+  updateMysqlDatabase(serverId, databaseId, data) {
+    return this.request.json('PUT', `servers/${serverId}/mysql/${databaseId}`, data, ({ database }) => new MySQLDatabase(database));
+  }
+
+  deleteMysqlDatabase(serverId, databaseId) {
+    return this.request.base('DELETE', `servers/${serverId}/mysql/${databaseId}`);
+  }
+
+  // Users
+  mysqlUsers(serverId) {
+    return this.request.json('GET', `servers/${serverId}/mysql-users`, data, ({ users }) => users.map(data => new MySQLUser(data)));
+  }
+
+  mysqlUser(serverId, userId) {
+    return this.request.json('GET', `servers/${serverId}/mysql-users/${userId}`, data, ({ user }) => new MySQLUser(user));
+  }
+
+  createMysqlUser(serverId, data) {
+    return this.request.json('POST', `servers/${serverId}/mysql-users`, data, ({ user }) => new MySQLUser(user));
+  }
+
+  updateMysqlUser(serverId, userId, data) {
+    return this.request.json('PUT', `servers/${serverId}/mysql-users/${userId}`, data, ({ user }) => new MySQLUser(user));
+  }
+
+  deleteMysqlUser(serverId, userId) {
+    return this.request.base('DELETE', `servers/${serverId}/mysql-users/${userId}`);
+  }
+
 }
 
 /* harmony default export */ __webpack_exports__["a"] = (Forge);
