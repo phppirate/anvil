@@ -23,24 +23,49 @@
 
         <div class="panel">
             <div class="panel-body">
-                <div style="margin-bottom: 10px;">
-                    <button class="btn is-success btn-block" @click="rebootServer" v-if="! rebooting">Reboot Server</button>
-                    <button class="btn is-success btn-block disabled" v-else><span class="fa fa-spinner fa-pulse"></span></button>
-                </div>
+                <div id="services" class="flex">
+                    <div class="reboot-services flex-1 mr-1">
+                        <div style="margin-bottom: 10px;">
+                            <button class="btn is-success btn-block" @click="rebootServer" v-if="! rebooting">Reboot Server</button>
+                            <button class="btn is-success btn-block disabled" v-else><span class="fa fa-spinner fa-pulse"></span></button>
+                        </div>
 
-                <div style="margin-bottom: 10px;">
-                    <button class="btn is-success btn-block" @click="rebootMysql" v-if="! rebootingMysql">Reboot MySQL</button>
-                    <button class="btn is-success btn-block disabled" v-else><span class="fa fa-spinner fa-pulse"></span></button>
-                </div>
+                        <div style="margin-bottom: 10px;">
+                            <button class="btn is-success btn-block" @click="rebootMysql" v-if="! rebootingMysql">Reboot MySQL</button>
+                            <button class="btn is-success btn-block disabled" v-else><span class="fa fa-spinner fa-pulse"></span></button>
+                        </div>
 
-                <div style="margin-bottom: 10px;">
-                    <button class="btn is-success btn-block" @click="rebootNginx" v-if="! rebootingNginx">Reboot NginX</button>
-                    <button class="btn is-success btn-block disabled" v-else><span class="fa fa-spinner fa-pulse"></span></button>
-                </div>
+                        <div style="margin-bottom: 10px;">
+                            <button class="btn is-success btn-block" @click="rebootNginx" v-if="! rebootingNginx">Reboot NginX</button>
+                            <button class="btn is-success btn-block disabled" v-else><span class="fa fa-spinner fa-pulse"></span></button>
+                        </div>
 
-                <div style="margin-bottom: 10px;">
-                    <button class="btn is-success btn-block" @click="rebootPostgres" v-if="! rebootingPostgres">Reboot Postgres</button>
-                    <button class="btn is-success btn-block disabled" v-else><span class="fa fa-spinner fa-pulse"></span></button>
+                        <div style="margin-bottom: 10px;">
+                            <button class="btn is-success btn-block" @click="rebootPostgres" v-if="! rebootingPostgres">Reboot Postgres</button>
+                            <button class="btn is-success btn-block disabled" v-else><span class="fa fa-spinner fa-pulse"></span></button>
+                        </div>
+                    </div>
+                    <div class="stop-services flex-1 ml-1">
+                        <div style="margin-bottom: 10px;">
+                            <button class="btn is-danger btn-block" @click="stopServer" v-if="! stoping">Stop Server</button>
+                            <button class="btn is-danger btn-block disabled" v-else><span class="fa fa-spinner fa-pulse"></span></button>
+                        </div>
+
+                        <div style="margin-bottom: 10px;">
+                            <button class="btn is-danger btn-block" @click="stopMysql" v-if="! stopingMysql">Stop MySQL</button>
+                            <button class="btn is-danger btn-block disabled" v-else><span class="fa fa-spinner fa-pulse"></span></button>
+                        </div>
+
+                        <div style="margin-bottom: 10px;">
+                            <button class="btn is-danger btn-block" @click="stopNginx" v-if="! stopingNginx">Stop NginX</button>
+                            <button class="btn is-danger btn-block disabled" v-else><span class="fa fa-spinner fa-pulse"></span></button>
+                        </div>
+
+                        <div style="margin-bottom: 10px;">
+                            <button class="btn is-danger btn-block" @click="stopPostgres" v-if="! stopingPostgres">Stop Postgres</button>
+                            <button class="btn is-danger btn-block disabled" v-else><span class="fa fa-spinner fa-pulse"></span></button>
+                        </div>
+                    </div>
                 </div>
 
                 <div>
@@ -59,6 +84,11 @@
             rebootingMysql: false,
             rebootingNginx: false,
             rebootingPostgres: false,
+
+            stoping: false,
+            stopingMysql: false,
+            stopingNginx: false,
+            stopingPostgres: false,
         }),
         computed: {
             server(){
@@ -80,30 +110,58 @@
             },
             rebootServer(){
                 this.rebooting = true;
-                forge.rebootServer(this.server)
+                forge.rebootServer(this.server.id)
                     .then(r => {
                         this.rebooting = false;
                     });
             },
             rebootMysql(){
                 this.rebootingMysql = true;
-                forge.rebootMysql(this.server)
+                forge.rebootMysql(this.server.id)
                     .then(r => {
                         this.rebootingMysql = false;
                     });
             },
             rebootNginx(){
                 this.rebootingNginx = true;
-                forge.rebootNginx(this.server)
+                forge.rebootNginx(this.server.id)
                     .then(r => {
                         this.rebootingNginx = false;
                     });
             },
             rebootPostgres(){
                 this.rebootingPostgres = true;
-                forge.rebootPostgres(this.server)
+                forge.rebootPostgres(this.server.id)
                     .then(r => {
                         this.rebootingPostgres = false;
+                    });
+            },
+            stopServer(){
+                this.stoping = true;
+                forge.stopServer(this.server.id)
+                    .then(r => {
+                        this.stoping = false;
+                    });
+            },
+            stopMysql(){
+                this.stopingMysql = true;
+                forge.stopMysql(this.server.id)
+                    .then(r => {
+                        this.stopingMysql = false;
+                    });
+            },
+            stopNginx(){
+                this.stopingNginx = true;
+                forge.stopNginx(this.server.id)
+                    .then(r => {
+                        this.stopingNginx = false;
+                    });
+            },
+            stopPostgres(){
+                this.stopingPostgres = true;
+                forge.stopPostgres(this.server.id)
+                    .then(r => {
+                        this.stopingPostgres = false;
                     });
             },
             getSiteApp(site){

@@ -1,21 +1,17 @@
-import Forge from '../Forge.js';
-
-let forge = config ? new Forge(config.api_token) : null;
-
 export default {
     getServers({commit, dispatch}){
-        forge.getServers()
+        forge.servers()
             .then(r => {
-                commit('set-servers', r.servers)
-                r.servers.forEach(s => {
+                commit('set-servers', r)
+                r.forEach(s => {
                     dispatch('getServerSites', s)
                 })
             })
     },
     getServerSites({commit}, server){
-        forge.getSites(server)
+        forge.sites(server.id)
             .then(r => {
-                commit('add-sites', r.sites.map(site => {
+                commit('add-sites', r.map(site => {
                     site.server_id = server.id;
                     return site;
                 }))
@@ -26,10 +22,10 @@ export default {
         if(site.quick_deploy){
             site.quick_deploy = false;
             commit('set-site', site)
-            return forge.disableQuickDeploy(server, site);
+            return forge.disableQuickDeploy(server.id, site.id);
         }
         site.quick_deploy = true;
         commit('set-site', site)
-        return forge.enableQuickDeploy(server, site);
+        return forge.enableQuickDeploy(server.id, site.id);
     }
 }

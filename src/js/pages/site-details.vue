@@ -75,13 +75,6 @@
             back(){
                 return this.$router.push('/servers/' + this.server.id)
             },
-            getDeployScript(site){
-                forge.getDeployScriptForSite(site)
-                    .then(r => {
-                        console.log(r);
-                        this.deployScript = r;
-                    });
-            },
             visitSite(){
                 console.log('Opening', shell);
                 shell.openExternal('http://' + this.site.name);
@@ -112,7 +105,7 @@
             },
             deployNow(){
                 this.deploying = true;
-                forge.deployServerSite(this.server, this.site)
+                forge.deploySite(this.server.id, this.site.id)
                     .then(r => this.deploying = false );
             },
             toggleQuickDeploy(){

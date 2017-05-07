@@ -14,9 +14,6 @@
 </template>
 
 <script>
-    import Forge from '../Forge.js';
-    let forge = config ? new Forge(config.api_token) : null;
-
     export default {
         data: () => ({
             deployScript: null,
@@ -29,6 +26,7 @@
             },
             site(){
                 let site = this.$store.getters.getSiteById(this.$route.params.site_id)
+                console.log(site);
                 if(! this.deployScript){
                     this.getDeployScript(site)
                 }
@@ -42,13 +40,14 @@
             },
             save(){
                 this.saving = true;
-                forge.saveDeployScriptForSite(this.site, this.$refs.deployScriptBox.value)
+                forge.updateSiteDeploymentScript(this.server.id, this.site.id, this.$refs.deployScriptBox.value)
                     .then(r => {
                         this.$router.push('/servers/' + this.server.id + '/sites/' + this.site.id)
                     });
             },
             getDeployScript(site){
-                forge.getDeployScriptForSite(site)
+                console.log('SITE', site.id);
+                forge.siteDeploymentScript(this.server.id, site.id)
                     .then(r => {
                         console.log(r);
                         this.deployScript = r;

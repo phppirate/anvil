@@ -18,6 +18,10 @@ html, body {
 
 * { box-sizing: border-box; }
 
+// Margins
+.mr-1{margin-right: 5px; }
+.ml-1{margin-left: 5px; }
+
 .titlebar{
     position: fixed;
     top: 0px;
@@ -97,6 +101,10 @@ html, body {
     justify-content: space-between;
 }
 
+.flex-1{
+    flex: 1;
+}
+
 
 
 
@@ -119,6 +127,24 @@ html, body {
     border: 1px solid darken(#20b885, 5%);
     &:hover{
         background: darken(#20b885, 5%);
+    }
+}
+
+.btn.is-danger{
+    background: #EF5350;
+    color: #fff;
+    border: 1px solid darken(#EF5350, 5%);
+    &:hover{
+        background: darken(#EF5350, 5%);
+    }
+}
+
+.btn.is-danger.disabled{
+    background: #E57373;
+    color: #fff;
+    border: 1px solid darken(#E57373, 5%);
+    &:hover{
+        background: darken(#E57373, 5%);
     }
 }
 

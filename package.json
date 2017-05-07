@@ -2,6 +2,7 @@
   "name": "anvil",
   "version": "1.0.0",
   "description": "",
+  "repository": "https://github.com/phppirate/anvil",
   "main": "main.js",
   "scripts": {
     "pack": "electron-packager . --icon=app/icons/app-icon --overwrite",
@@ -14,8 +15,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "forge-sdk": "^1.0.0",
     "menubar": "^5.2.3",
-    "osap": "^1.0.2"
+    "osap": "^1.0.2",
+    "vue": "^2.3.2",
+    "vue-router": "^2.5.3",
+    "vuex": "^2.3.1"
   },
   "devDependencies": {
     "electron": "^1.6.6"

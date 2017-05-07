@@ -14,9 +14,6 @@
 </template>
 
 <script>
-    import Forge from '../Forge.js';
-    let forge = config ? new Forge(config.api_token) : null;
-
     export default {
         data: () => ({
             log: null,
@@ -29,7 +26,7 @@
             },
             site(){
                 let site = this.$store.getters.getSiteById(this.$route.params.site_id)
-                if(! this.deployScript){
+                if(! this.log){
                     this.getDeploymentLog(site)
                 }
                 return site
@@ -41,7 +38,8 @@
                 return this.$router.push('/servers/' + this.server.id + '/sites/' + this.site.id)
             },
             getDeploymentLog(site){
-                forge.getDeploymentLog(site)
+                console.log(this.server, site);
+                forge.siteDeploymentLog(this.server.id, site.id)
                     .then(r => {
                         console.log(r);
                         this.loading = false;

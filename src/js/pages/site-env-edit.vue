@@ -14,9 +14,6 @@
 </template>
 
 <script>
-    import Forge from '../Forge.js';
-    let forge = config ? new Forge(config.api_token) : null;
-
     export default {
         data: () => ({
             env: null,
@@ -42,13 +39,14 @@
             },
             save(){
                 this.saving = true;
-                forge.saveEnvForSite(this.site, this.env)
+                forge.updateSiteEnvironmentFile(this.server.id, this.site.id, this.env)
                     .then(r => {
-                        this.env = r;
+                        // this.env = r;
+                        this.back()
                     });
             },
             getEnv(site){
-                forge.getEnvForSite(site)
+                forge.siteEnvironmentFile(this.server.id, site.id)
                     .then(r => {
                         console.log(r);
                         this.env = r;
