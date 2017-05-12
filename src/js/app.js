@@ -28,6 +28,10 @@ let store = new Vuex.Store({
     mutations
 });
 
+window.openExternal = (url) => {
+    shell.openExternal(url);
+}
+
 console.log(router);
 
 
@@ -68,6 +72,9 @@ window.appl = new Vue({
             this.isOnline = status
             this.checkLoggedIn();
         },
+        openExternal(url){
+            openExternal(url);
+        },
         listen(){
             // Handle the Case that a user is Offline
             // So you don't Just see Infinate Spinner
@@ -76,7 +83,7 @@ window.appl = new Vue({
             this.isOnline = window.navigator.onLine;
             window.addEventListener('online', () => this.updateNetworkStatus());
             window.addEventListener('offline', () => this.updateNetworkStatus(false));
-
+            this.updateNetworkStatus()
             // Left this here to Remond me how to use my own Job Queue Manager :)
             // 
             // let job1 = new Job('http://muni-api.dev/api/test')

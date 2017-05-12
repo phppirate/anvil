@@ -30,6 +30,7 @@
                     <div class="panel-body">
                         <div>
                             <input class="form-control" type="text" ref="token" name="api_token" id="api_token" placeholder="API Token">
+                            <div class="help-text"><a href="#" @click.prevent="openExternal('https://forge.laravel.com/user/profile#/api')">Get one here</a></div>
                         </div>
                         <div>
                             <button class="btn is-success btn-block" @click="logIn" v-if="! connecting">Connect</button>

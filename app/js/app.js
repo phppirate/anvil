@@ -170,6 +170,10 @@ var store = new __WEBPACK_IMPORTED_MODULE_2_vuex__["a" /* default */].Store({
     mutations: __WEBPACK_IMPORTED_MODULE_6__vuex_mutations_js__["a" /* default */]
 });
 
+window.openExternal = function (url) {
+    shell.openExternal(url);
+};
+
 console.log(router);
 
 window.appl = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
@@ -211,6 +215,19 @@ window.appl = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
             this.isOnline = status;
             this.checkLoggedIn();
         },
+        openExternal: function (_openExternal) {
+            function openExternal(_x2) {
+                return _openExternal.apply(this, arguments);
+            }
+
+            openExternal.toString = function () {
+                return _openExternal.toString();
+            };
+
+            return openExternal;
+        }(function (url) {
+            openExternal(url);
+        }),
         listen: function listen() {
             var _this = this;
 
@@ -225,7 +242,7 @@ window.appl = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
             window.addEventListener('offline', function () {
                 return _this.updateNetworkStatus(false);
             });
-
+            this.updateNetworkStatus();
             // Left this here to Remond me how to use my own Job Queue Manager :)
             // 
             // let job1 = new Job('http://muni-api.dev/api/test')
