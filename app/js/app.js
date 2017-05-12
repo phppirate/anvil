@@ -170,6 +170,7 @@ console.log(router);
 
 window.app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
     data: {
+        isOnline: false,
         isLoggedIn: false,
         connecting: false
     },
@@ -199,9 +200,24 @@ window.app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
         logOut: function logOut() {
             localStorage.removeItem('config');
             window.location.reload();
+        },
+        listen: function listen() {
+            var _this = this;
+
+            // Handle the Case that a user is Offline
+            // So you don't Just see Infinate Spinner
+            // We are checking net status before load
+            this.isOnline = window.navigator.onLine;
+            window.addEventListener('online', function () {
+                return _this.isOnline = true;
+            });
+            window.addEventListener('offline', function () {
+                return _this.isOnline = false;
+            });
         }
     },
     mounted: function mounted() {
+        this.listen();
         this.checkLoggedIn();
     },
 

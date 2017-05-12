@@ -31,6 +31,7 @@ console.log(router);
 
 window.app = new Vue({
     data: {
+        isOnline: false,
         isLoggedIn: false,
         connecting: false
     },
@@ -60,9 +61,18 @@ window.app = new Vue({
         logOut(){
             localStorage.removeItem('config');
             window.location.reload();
+        },
+        listen(){
+            // Handle the Case that a user is Offline
+            // So you don't Just see Infinate Spinner
+            // We are checking net status before load
+            this.isOnline = window.navigator.onLine;
+            window.addEventListener('online', () => this.isOnline = true);
+            window.addEventListener('offline', () => this.isOnline = false);
         }
     },
     mounted(){
+        this.listen();
         this.checkLoggedIn();
     },
     router,

@@ -226,3 +226,17 @@ pre{
         white-space: pre;
     }
 }
+
+.no-wifi{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 150px);
+    text-align: center;
+    color: #aaa;
+
+    .online-icon{
+        font-size: 56px;
+        margin-bottom: 15px;
+    }
+}
