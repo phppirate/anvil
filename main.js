@@ -1,8 +1,7 @@
 let electron = require('electron')
 let app = electron.app
-let {Menu} = electron;
+let {Menu} = electron
 var menubar = require('menubar')
-
 
 var mb = menubar({
     width: 300,

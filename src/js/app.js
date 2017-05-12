@@ -8,7 +8,9 @@ import actions from './vuex/actions.js';
 import getters from './vuex/getters.js';
 import mutations from './vuex/mutations.js';
 import Forge from 'forge-sdk';
-
+import Job from './Job';
+import QueueService from './Queue';
+let Queue = new QueueService();
 window.forge = config ? new Forge(config.api_token) : null;
 
 let router = new VueRouter({
@@ -29,9 +31,9 @@ let store = new Vuex.Store({
 console.log(router);
 
 
-window.app = new Vue({
+window.appl = new Vue({
     data: {
-        isOnline: false,
+        isOnline: true,
         isLoggedIn: false,
         connecting: false
     },
@@ -62,18 +64,36 @@ window.app = new Vue({
             localStorage.removeItem('config');
             window.location.reload();
         },
+        updateNetworkStatus(status = true){
+            this.isOnline = status
+            this.checkLoggedIn();
+        },
         listen(){
             // Handle the Case that a user is Offline
             // So you don't Just see Infinate Spinner
             // We are checking net status before load
+            // @TODO: Test that this actually works
             this.isOnline = window.navigator.onLine;
-            window.addEventListener('online', () => this.isOnline = true);
-            window.addEventListener('offline', () => this.isOnline = false);
+            window.addEventListener('online', () => this.updateNetworkStatus());
+            window.addEventListener('offline', () => this.updateNetworkStatus(false));
+
+            // Left this here to Remond me how to use my own Job Queue Manager :)
+            // 
+            // let job1 = new Job('http://muni-api.dev/api/test')
+            //     .compareWith(r => r.indexOf('Yo') != -1)
+            //     .withCallback(() => new Notification('Server "mirthful-hill" has been provisioned'))
+            //     .every(5000)
+            // let job2 = new Job('http://muni-api.dev/api/test2')
+            //     .compareWith(r => r.indexOf('Yo') != -1)
+            //     .withCallback(() => new Notification('Server "mirthful-hill" has been deployed'))
+            //     .every(5000)
+            // Queue.push(job1)
+            // Queue.push(job2)
+            // new Notification(Queue.count())
         }
     },
     mounted(){
         this.listen();
-        this.checkLoggedIn();
     },
     router,
     store

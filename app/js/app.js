@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 30);
+/******/ 	return __webpack_require__(__webpack_require__.s = 32);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -129,15 +129,17 @@ module.exports = function normalizeComponent (
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(29);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuex__ = __webpack_require__(28);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__routes_js__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__vuex_actions_js__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__vuex_getters_js__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__vuex_mutations_js__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_forge_sdk__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuex__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__routes_js__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__vuex_actions_js__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__vuex_getters_js__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__vuex_mutations_js__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_forge_sdk__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__Job__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__Queue__ = __webpack_require__(10);
 
 
 
@@ -149,6 +151,8 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_2_vuex
 
 
 
+
+var Queue = new __WEBPACK_IMPORTED_MODULE_9__Queue__["a" /* default */]();
 window.forge = config ? new __WEBPACK_IMPORTED_MODULE_7_forge_sdk__["a" /* default */](config.api_token) : null;
 
 var router = new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
@@ -168,9 +172,9 @@ var store = new __WEBPACK_IMPORTED_MODULE_2_vuex__["a" /* default */].Store({
 
 console.log(router);
 
-window.app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
+window.appl = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
     data: {
-        isOnline: false,
+        isOnline: true,
         isLoggedIn: false,
         connecting: false
     },
@@ -201,24 +205,44 @@ window.app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
             localStorage.removeItem('config');
             window.location.reload();
         },
+        updateNetworkStatus: function updateNetworkStatus() {
+            var status = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+            this.isOnline = status;
+            this.checkLoggedIn();
+        },
         listen: function listen() {
             var _this = this;
 
             // Handle the Case that a user is Offline
             // So you don't Just see Infinate Spinner
             // We are checking net status before load
+            // @TODO: Test that this actually works
             this.isOnline = window.navigator.onLine;
             window.addEventListener('online', function () {
-                return _this.isOnline = true;
+                return _this.updateNetworkStatus();
             });
             window.addEventListener('offline', function () {
-                return _this.isOnline = false;
+                return _this.updateNetworkStatus(false);
             });
+
+            // Left this here to Remond me how to use my own Job Queue Manager :)
+            // 
+            // let job1 = new Job('http://muni-api.dev/api/test')
+            //     .compareWith(r => r.indexOf('Yo') != -1)
+            //     .withCallback(() => new Notification('Server "mirthful-hill" has been provisioned'))
+            //     .every(5000)
+            // let job2 = new Job('http://muni-api.dev/api/test2')
+            //     .compareWith(r => r.indexOf('Yo') != -1)
+            //     .withCallback(() => new Notification('Server "mirthful-hill" has been deployed'))
+            //     .every(5000)
+            // Queue.push(job1)
+            // Queue.push(job2)
+            // new Notification(Queue.count())
         }
     },
     mounted: function mounted() {
         this.listen();
-        this.checkLoggedIn();
     },
 
     router: router,
@@ -835,10 +859,134 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony default export */ __webpack_exports__["a"] = ([{ path: '/', redirect: '/servers' }, { path: '/servers', component: __webpack_require__(15) }, { path: '/servers/:server_id', component: __webpack_require__(14) }, { path: '/servers/:server_id/sites/:site_id', component: __webpack_require__(18) }, { path: '/servers/:server_id/sites/:site_id/deployment/script', component: __webpack_require__(16) }, { path: '/servers/:server_id/sites/:site_id/deployment/log', component: __webpack_require__(17) }, { path: '/servers/:server_id/sites/:site_id/env', component: __webpack_require__(19) }]);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+//  End Structure of a Job
+//  {
+//     url: 'path/to/thing',
+//     method: "GET",
+//     convertsTo: "text",
+//     compare(){},
+//     callback(){},
+//     interval: 12000,
+// }
+
+var Job = function () {
+    function Job(url) {
+        _classCallCheck(this, Job);
+
+        this.url = url;
+        this.callback = function () {
+            return true;
+        };
+        this.compare = function () {
+            return true;
+        };
+        this.interval = 12000;
+        this.convertsTo = "text";
+        this.method = "GET";
+    }
+
+    _createClass(Job, [{
+        key: "withCallback",
+        value: function withCallback(callback) {
+            this.callback = callback;
+            return this;
+        }
+    }, {
+        key: "using",
+        value: function using(method) {
+            this.method = method;
+            return this;
+        }
+    }, {
+        key: "return",
+        value: function _return(convertsTo) {
+            this.convertsTo = convertsTo;
+            return this;
+        }
+    }, {
+        key: "every",
+        value: function every(interval) {
+            this.interval = interval;
+            return this;
+        }
+    }, {
+        key: "compareWith",
+        value: function compareWith(compare) {
+            this.compare = compare;
+            return this;
+        }
+    }]);
+
+    return Job;
+}();
+
+/* unused harmony default export */ var _unused_webpack_default_export = (Job);
 
 /***/ }),
 /* 10 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Queue = function () {
+    function Queue() {
+        _classCallCheck(this, Queue);
+
+        this.jobs = {};
+    }
+
+    _createClass(Queue, [{
+        key: 'count',
+        value: function count() {
+            return Object.keys(this.jobs).length;
+        }
+    }, {
+        key: 'push',
+        value: function push(job) {
+            var _this = this;
+
+            var uniqueId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+            var jobId = uniqueId ? uniqueId : Math.floor(Math.random() * (999999 - 100000)) + 100000;
+            this.jobs[jobId] = job;
+            var timer = setInterval(function () {
+                console.log('TRIED');
+                fetch(job.url, { method: job.method }).then(function (r) {
+                    return r[job.convertsTo]();
+                }).then(function (r) {
+                    console.log(r);
+                    if (job.compare(r)) {
+                        clearInterval(timer);
+                        job.callback();
+                        delete _this.jobs[jobId];
+                        console.log('DONE TRYING');
+                    }
+                });
+            }, job.interval);
+        }
+    }]);
+
+    return Queue;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (Queue);
+
+/***/ }),
+/* 11 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ __webpack_exports__["a"] = ([{ path: '/', redirect: '/servers' }, { path: '/servers', component: __webpack_require__(17) }, { path: '/servers/:server_id', component: __webpack_require__(16) }, { path: '/servers/:server_id/sites/:site_id', component: __webpack_require__(20) }, { path: '/servers/:server_id/sites/:site_id/deployment/script', component: __webpack_require__(18) }, { path: '/servers/:server_id/sites/:site_id/deployment/log', component: __webpack_require__(19) }, { path: '/servers/:server_id/sites/:site_id/env', component: __webpack_require__(21) }]);
+
+/***/ }),
+/* 12 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -882,7 +1030,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -911,7 +1059,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -939,7 +1087,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 });
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1372,14 +1520,14 @@ class Forge {
 
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
   __webpack_require__(3),
   /* template */
-  __webpack_require__(21),
+  __webpack_require__(23),
   /* scopeId */
   null,
   /* cssModules */
@@ -1406,14 +1554,14 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
   __webpack_require__(4),
   /* template */
-  __webpack_require__(24),
+  __webpack_require__(26),
   /* scopeId */
   null,
   /* cssModules */
@@ -1440,14 +1588,14 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
   __webpack_require__(5),
   /* template */
-  __webpack_require__(20),
+  __webpack_require__(22),
   /* scopeId */
   null,
   /* cssModules */
@@ -1474,14 +1622,14 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 17 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
   __webpack_require__(6),
   /* template */
-  __webpack_require__(25),
+  __webpack_require__(27),
   /* scopeId */
   null,
   /* cssModules */
@@ -1508,14 +1656,14 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 18 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
   __webpack_require__(7),
   /* template */
-  __webpack_require__(23),
+  __webpack_require__(25),
   /* scopeId */
   null,
   /* cssModules */
@@ -1542,14 +1690,14 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 19 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
   __webpack_require__(8),
   /* template */
-  __webpack_require__(22),
+  __webpack_require__(24),
   /* scopeId */
   null,
   /* cssModules */
@@ -1576,7 +1724,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 20 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -1625,7 +1773,7 @@ if (false) {
 }
 
 /***/ }),
-/* 21 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -1813,7 +1961,7 @@ if (false) {
 }
 
 /***/ }),
-/* 22 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -1873,7 +2021,7 @@ if (false) {
 }
 
 /***/ }),
-/* 23 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -1990,7 +2138,7 @@ if (false) {
 }
 
 /***/ }),
-/* 24 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -2048,7 +2196,7 @@ if (false) {
 }
 
 /***/ }),
-/* 25 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -2091,7 +2239,7 @@ if (false) {
 }
 
 /***/ }),
-/* 26 */
+/* 28 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4562,7 +4710,7 @@ if (inBrowser && window.Vue) {
 
 
 /***/ }),
-/* 27 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14197,10 +14345,10 @@ Vue$3.compile = compileToFunctions;
 
 module.exports = Vue$3;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(29)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(31)))
 
 /***/ }),
-/* 28 */
+/* 30 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -15013,7 +15161,7 @@ var index_esm = {
 
 
 /***/ }),
-/* 29 */
+/* 31 */
 /***/ (function(module, exports) {
 
 var g;
@@ -15040,7 +15188,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 30 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(1);
