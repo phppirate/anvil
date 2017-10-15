@@ -39,7 +39,7 @@
             },
             getDeploymentLog(site){
                 console.log(this.server, site);
-                forge.siteDeploymentLog(this.server.id, site.id)
+                site.account.siteDeploymentLog(this.server.id, site.id)
                     .then(r => {
                         console.log(r);
                         this.loading = false;

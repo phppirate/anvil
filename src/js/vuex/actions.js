@@ -1,7 +1,13 @@
 export default {
-    getServers({commit, dispatch}){
-        forge.servers()
+    getServers({commit, dispatch}, account){
+        console.log('Adding Servers: ', account)
+        account.servers()
             .then(r => {
+                let servers = r.map(server => {
+                    server.account = account
+                    return server
+                })
+                console.log(account.id, servers)
                 commit('set-servers', r)
                 r.forEach(s => {
                     dispatch('getServerSites', s)
@@ -9,10 +15,11 @@ export default {
             })
     },
     getServerSites({commit}, server){
-        forge.sites(server.id)
+        server.account.sites(server.id)
             .then(r => {
                 commit('add-sites', r.map(site => {
                     site.server_id = server.id;
+                    site.account = server.account;
                     return site;
                 }))
                 commit('ready')
@@ -22,10 +29,10 @@ export default {
         if(site.quick_deploy){
             site.quick_deploy = false;
             commit('set-site', site)
-            return forge.disableQuickDeploy(server.id, site.id);
+            return site.account.disableQuickDeploy(server.id, site.id);
         }
         site.quick_deploy = true;
         commit('set-site', site)
-        return forge.enableQuickDeploy(server.id, site.id);
+        return site.account.enableQuickDeploy(server.id, site.id);
     }
 }

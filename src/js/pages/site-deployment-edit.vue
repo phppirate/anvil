@@ -40,14 +40,14 @@
             },
             save(){
                 this.saving = true;
-                forge.updateSiteDeploymentScript(this.server.id, this.site.id, this.$refs.deployScriptBox.value)
+                this.server.account.updateSiteDeploymentScript(this.server.id, this.site.id, this.$refs.deployScriptBox.value)
                     .then(r => {
                         this.$router.push('/servers/' + this.server.id + '/sites/' + this.site.id)
                     });
             },
             getDeployScript(site){
                 console.log('SITE', site.id);
-                forge.siteDeploymentScript(this.server.id, site.id)
+                this.server.account.siteDeploymentScript(this.server.id, site.id)
                     .then(r => {
                         console.log(r);
                         this.deployScript = r;

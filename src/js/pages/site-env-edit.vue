@@ -39,14 +39,13 @@
             },
             save(){
                 this.saving = true;
-                forge.updateSiteEnvironmentFile(this.server.id, this.site.id, this.env)
+                this.server.account.updateSiteEnvironmentFile(this.server.id, this.site.id, this.env)
                     .then(r => {
-                        // this.env = r;
                         this.back()
                     });
             },
             getEnv(site){
-                forge.siteEnvironmentFile(this.server.id, site.id)
+                this.server.account.siteEnvironmentFile(this.server.id, site.id)
                     .then(r => {
                         console.log(r);
                         this.env = r;

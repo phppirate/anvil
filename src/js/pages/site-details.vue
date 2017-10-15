@@ -105,7 +105,7 @@
             },
             deployNow(){
                 this.deploying = true;
-                forge.deploySite(this.server.id, this.site.id)
+                this.server.account.deploySite(this.server.id, this.site.id)
                     .then(r => this.deploying = false );
             },
             toggleQuickDeploy(){

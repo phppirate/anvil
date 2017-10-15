@@ -11,7 +11,8 @@ import Forge from 'forge-sdk';
 import Job from './Job';
 import QueueService from './Queue';
 let Queue = new QueueService();
-window.forge = config ? new Forge(config.api_token) : null;
+window._ = require('lodash');
+window.forgeAccounts = accounts ? mapAccounts(accounts) : null;
 
 let router = new VueRouter({
     routes: routes
@@ -48,7 +49,9 @@ window.appl = new Vue({
     },
     methods: {
         getData(){
-            this.$store.dispatch('getServers')
+            forgeAccounts.forEach(account => {
+                this.$store.dispatch('getServers', account)
+            })
         },
         checkLoggedIn(){
             this.isLoggedIn = loggedIn;
@@ -58,10 +61,9 @@ window.appl = new Vue({
         },
         logIn(){
             let apiToken = this.$refs.token.value;
-            let data = {
-                api_token: apiToken
-            };
-            localStorage.setItem('config', JSON.stringify(data));
+            let name = this.$refs.name.value;
+            let data = [{api_token: apiToken, name}];
+            localStorage.setItem('accounts', JSON.stringify(data));
             window.location.reload();
         },
         logOut(){
@@ -105,3 +107,15 @@ window.appl = new Vue({
     router,
     store
 }).$mount('#app');
+
+
+function mapAccounts(accounts){
+    let index = 0
+    return accounts.map(a => {
+        index++
+        let account = new Forge(a.api_token)
+        account.id = index
+        account.name = a.name || "Account #" + index
+        return account
+    })
+}

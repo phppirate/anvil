@@ -1,6 +1,6 @@
 export default {
     'set-servers': (state, servers) => {
-        state.servers = servers;
+        state.servers.push(...servers);
     },
     'add-sites': (state, sites) => {
         state.sites.push(...sites);

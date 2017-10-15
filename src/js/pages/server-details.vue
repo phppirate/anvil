@@ -178,6 +178,9 @@
                     if(site.repository_provider === 'github'){
                         return `<span class="fa fa-github"></span>`
                     }
+                    if(site.repository_provider === 'bitbucket'){
+                        return `<span class="fa fa-bitbucket"></span>`
+                    }
 
                     return `<span class="fa fa-question-circle-o"></span>`
                 }

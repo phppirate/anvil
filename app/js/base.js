@@ -5,10 +5,15 @@ let basePath = __dirname;
 basePath = basePath.split('/');
 basePath.splice(-1);
 basePath = basePath.join('/');
-let config = null;
+let accounts = null;
 let configPath = basePath + "/forge.config.json";
-let loggedIn = localStorage.getItem('config');
+
+if(localStorage.getItem('config')) {
+    localStorage.setItem('accounts', JSON.stringify([JSON.parse(localStorage.getItem('config'))]))
+}
+
+let loggedIn = localStorage.getItem('accounts');
 console.log(loggedIn);
 if(loggedIn){
-    config = JSON.parse(loggedIn)
+    accounts = JSON.parse(loggedIn)
 }
